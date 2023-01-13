@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::io;
 
 pub fn company_main() {
-    let mut departments: HashMap<&str, Vec<&str>> = HashMap::new();
+    let mut departments: HashMap<&str, Vec<String>> = HashMap::new();
     departments.insert("HHRR", Vec::new());
     departments.insert("Accountancy", Vec::new());
     departments.insert("Psicology", Vec::new());
@@ -25,12 +25,10 @@ pub fn company_main() {
             }
         }
 
-        let mut dep: &str = "";
-
-        match text_input.chars().next().unwrap() {
-            '1' => {dep = "HHRR";},
-            '2' => {dep = "Accountancy";},
-            '3' => {dep = "Psicology";},
+        let dep: &str = match text_input.chars().next().unwrap() {
+            '1' => "HHRR",
+            '2' => "Accountancy",
+            '3' => "Psicology",
             '4' => {
                 print_departments(&departments);
                 continue;
@@ -40,11 +38,12 @@ pub fn company_main() {
                 println!("Invalid argument.");
                 continue;
             }
-        }
+        };
 
 
         println!("Enter the name of your new colleague");
 
+        text_input.clear();
         match io::stdin().read_line(&mut text_input) {
             Ok(_) => (),
             Err(_) => {
@@ -52,18 +51,12 @@ pub fn company_main() {
                 continue;
             }
         }
-
         let vec = departments.get_mut(dep).unwrap();
-        // Esta última línea no puede hacerse, porque la referencia de &text_input
-        // se ve borrada al reiniciar el loop, y el vector pierde la referencia
-        // de la memoria dinámica que allocó previamente.
-        // vec.push(&text_input);
-        vec.push("Hola");
+        vec.push(String::from(text_input.trim()));
     }
-
 }
 
-fn print_departments(departments: &HashMap<&str, Vec<&str>>) {
+fn print_departments(departments: &HashMap<&str, Vec<String>>) {
     for (dep, person_vec) in departments.iter() {
         println!("{}", *dep);
         for person in person_vec {
