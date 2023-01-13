@@ -1,23 +1,13 @@
-struct User {
-    active: bool,
-    username: String,
-    email: String,
-    sign_in_count: u64,
-}
+mod my_struct;
 
 fn main() {
-    let mut user : User = build_user(
+    let mut user : my_struct::User = build_user(
         String::from("mail@example.com"), 
         String::from("Cotti"));
 
-    user.email = String::from("new_mail@example.com");
+    user.set_email("new_mail@example.com");
 }
 
-fn build_user(email: String, username: String) -> User {
-    User {
-        email: email,
-        username: username,
-        active: true,
-        sign_in_count: 1,
-    }
+fn build_user(email: String, username: String) -> my_struct::User {
+    my_struct::User::new(&email, &username)
 }
