@@ -1,3 +1,9 @@
+//! # My crate
+//! 
+//! This special comment line is the main description of the crate
+//! Use it wisely.
+//! 
+//! As such, it should always be placed first in the src/lib.
 use std::fs;
 use std::error::Error;
 use std::env;
@@ -10,14 +16,20 @@ pub struct Config {
 
 
 impl Config {
-    pub fn build(args: Vec<String>) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("Not enough arguments.");
-        }
-
-        let query: String = String::from(&args[1]);
-        let file_path = String::from(&args[2]);
+    pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
         
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file path"),
+        };
+
         let ignore_case = env::var("IGNORE_CASE").is_ok();
     
         Ok(Config { query, file_path, ignore_case })
@@ -25,6 +37,27 @@ impl Config {
 }
 
 
+/// Documentation Example (3 slashes and supports markdown)
+/// You can auto-generate documentation in HTML form using:
+/// 
+/// Every line of code written as code block will be compiled and
+/// executed when you run `cargo test`, except "ignore" is specified
+/// 
+/// ```ignore
+/// $ cargo doc  (will compile the docs in target/doc)
+/// $ cargo doc --open (will also open the result)
+/// ```
+///
+/// # Examples
+/// ```
+/// use minigrep::Config;
+/// 
+/// let config = Config {
+///     query: String::from("to"),
+///     file_path: String::from("poem.txt"), 
+///     ignore_case: true};
+/// minigrep::run(config).expect("exito");
+/// ```
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.file_path)?;
 
@@ -41,15 +74,10 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-
-    results
+    contents.
+        lines().
+        filter(|line| line.contains(query)).
+        collect()
 }
 
 pub fn search_case_insensitive<'a>(
