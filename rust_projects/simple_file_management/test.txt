@@ -1,0 +1,6 @@
+Nicolas,Cotti,23
+Felipe,Nirino,45
+Francisco,Burnes,16
+Dominga,Conte,58
+Daniel,Cotti,70
+Argentino,Roca,167

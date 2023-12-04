@@ -1,0 +1,6 @@
+Ideas for CLI projects (using RUST obviously!):
+
+* Automatic sudoku solver.
+* Full file system on linux support (know file size, whether is file or dir, permits, copy, move, rename, etc...)
+* ncurses CLI style.
+* 
